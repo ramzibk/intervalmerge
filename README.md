@@ -1,5 +1,5 @@
 ## Description
-This is a solution implementation for interval merge problem.   
+This is a solution implementation for Interval merge problem.   
 #### Problem:  
 Implement a Function MERGE that accepts a List of Intervals and returns
 a List as a result.    

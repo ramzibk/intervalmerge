@@ -16,7 +16,7 @@ public class App
         App app = new App();
         List<Interval> parsedIntervals = app.parseIntervals(args);
         List<Interval> mergedIntervals = app.mergeIntervals(parsedIntervals);
-        System.out.printf("Meged Intervals: "+mergedIntervals.stream().map(Interval::toString).collect(Collectors.joining()));
+        System.out.println("Merged Intervals: "+mergedIntervals.stream().map(Interval::toString).collect(Collectors.joining()));
     }
 
     public List<Interval> mergeIntervals(List<Interval> intervals) {
@@ -28,7 +28,7 @@ public class App
         List<Interval> sorted = sortIntervals(intervals);
 
         // merge the intervals
-        Stack<Interval> stack = new Stack();
+        Stack<Interval> stack = new Stack<>();
         stack.push(sorted.get(0));
 
         for(int i=1; i<sorted.size(); i++){
@@ -49,13 +49,7 @@ public class App
      */
     public List<Interval> sortIntervals(List<Interval> intervals) {
         // O(nLog(n))
-        Collections.sort(intervals,
-                new Comparator<Interval>() {
-                    @Override
-                    public int compare(Interval o1, Interval o2) {
-                        return Integer.compare(o1.getMin(), o2.getMin());
-                    }
-                });
+        Collections.sort(intervals, (o1, o2) -> Integer.compare(o1.getMin(), o2.getMin()));
         return intervals;
     }
 
@@ -66,9 +60,9 @@ public class App
      */
     public List<Interval> parseIntervals(String[] args){
         String join = String.join(" ",Arrays.asList(args));
-        join.replace(" ","");
-        Matcher matcher = Pattern.compile("\\[\\s*\\d*\\*?,\\s*\\d*\\s*?\\]").matcher(join);
-        List<Interval> intervals = new ArrayList();
+        join = join.replace(" ","");
+        Matcher matcher = Pattern.compile("\\[\\d*?,\\d*?\\]").matcher(join);
+        List<Interval> intervals = new ArrayList<>();
 
         while (matcher.find()) {
             String strInterval = matcher.group();

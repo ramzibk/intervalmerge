@@ -2,12 +2,9 @@ package com.rbk.intervalmerge;
 
 import org.junit.jupiter.api.Test;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class AppTest 
 {
-    App app = new App();
+    final App app = new App();
 
     @Test
     public void testParseIntervals(){
@@ -38,7 +35,7 @@ public class AppTest
         assertEquals(intervals.size(), sorted.size());
         for(Interval interval : expected) {
             int index = expected.indexOf(interval);
-            assertTrue(sorted.get(index).equals(interval));
+            assertEquals(interval, sorted.get(index));
         }
     }
 
@@ -52,23 +49,23 @@ public class AppTest
 
         List<Interval> merged = app.mergeIntervals(intervals);
 
-        List<Interval> expectd = new ArrayList<>();
-        expectd.add(new Interval(2,8));
-        expectd.add(new Interval(12,27));
-        assertEquals(expectd, merged);
+        List<Interval> expected = new ArrayList<>();
+        expected.add(new Interval(2,8));
+        expected.add(new Interval(12,27));
+        assertEquals(expected, merged);
     }
 
     @Test
     public void testPerformance() {
         for(int size: Arrays.asList(10,100,1000,10_000,100_000,1_000_000)) {
-            System.out.println("testing performace.");
+            System.out.println("testing performance.");
             List<Interval> intervals = new ArrayList<>();
             for (int i = 0; i < size; i++) {
                 int min = (int) (Math.random() * 100);
                 intervals.add(new Interval(min, min + (int) (Math.random() * 100)));
             }
             long startTime = System.currentTimeMillis();
-            List<Interval> merged = app.mergeIntervals(intervals);
+            app.mergeIntervals(intervals);
             long endTime = System.currentTimeMillis();
             System.out.println("test run for " + size + " intervals in " + (endTime - startTime) + "ms");
         }
