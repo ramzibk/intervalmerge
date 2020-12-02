@@ -16,7 +16,7 @@ public class App
         App app = new App();
         List<Interval> parsedIntervals = app.parseIntervals(args);
         List<Interval> mergedIntervals = app.mergeIntervals(parsedIntervals);
-        System.out.println("Merged Intervals: "+mergedIntervals.stream().map(Interval::toString).collect(Collectors.joining()));
+        System.out.println("Merged Intervals: "+mergedIntervals.parallelStream().map(Interval::toString).collect(Collectors.joining()));
     }
 
     public List<Interval> mergeIntervals(List<Interval> intervals) {

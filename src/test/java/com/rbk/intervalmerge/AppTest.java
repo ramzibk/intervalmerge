@@ -2,12 +2,9 @@ package com.rbk.intervalmerge;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit test for simple App.
@@ -28,7 +25,7 @@ public class AppTest
 
     @Test
     public void testSortIntervals(){
-        List<Interval> intervals = new ArrayList<Interval>(Arrays.asList(new Interval(12,6), new Interval(2,3), new Interval(4,77)));
+        List<Interval> intervals = new ArrayList<>(Arrays.asList(new Interval(12,6), new Interval(2,3), new Interval(4,77)));
         List<Interval> sorted = app.sortIntervals(intervals);
 
         List<Interval> expected = Arrays.asList( new Interval(2, 3), new Interval(4, 77), new Interval(12, 6));
@@ -57,18 +54,34 @@ public class AppTest
 
     @Test
     public void testPerformance() {
-        for(int size: Arrays.asList(10,100,1000,10_000,100_000,1_000_000)) {
-            System.out.println("testing performance.");
-            List<Interval> intervals = new ArrayList<>();
-            for (int i = 0; i < size; i++) {
-                int min = (int) (Math.random() * 100);
-                intervals.add(new Interval(min, min + (int) (Math.random() * 100)));
+        System.out.println("testing performance..");
+        final int TIMES = 5;
+        Map<Integer, List<Long>> timeMap = new HashMap<>();
+        int size;
+        for(int i=1;i<=TIMES;i++) {
+            for (int j = 1; j <= 10; j++) {
+                size = j*10000;
+                long time = getMergingTime(size*10);
+                timeMap.computeIfAbsent(size, k -> new ArrayList<>());
+                timeMap.get(size).add(time);
             }
-            long startTime = System.currentTimeMillis();
-            app.mergeIntervals(intervals);
-            long endTime = System.currentTimeMillis();
-            System.out.println("test run for " + size + " intervals in " + (endTime - startTime) + "ms");
         }
+
+        timeMap.entrySet().parallelStream().sorted(Comparator.comparingLong(Map.Entry::getKey)).forEach(
+                entry -> System.out.println("run merge "+TIMES+" times for " + entry.getKey() + " intervals with "
+                        + timeMap.get(entry.getKey()).parallelStream().reduce(0L, Long::sum)/TIMES + "ms"
+                        +" mean time"));
     }
 
+    private long getMergingTime(int size) {
+        List<Interval> intervals = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            int min = (int) (Math.random() * 100);
+            intervals.add(new Interval(min, min + (int) (Math.random() * 100)));
+        }
+        long startTime = System.currentTimeMillis();
+        app.mergeIntervals(intervals);
+        long endTime = System.currentTimeMillis();
+        return endTime - startTime;
+    }
 }
