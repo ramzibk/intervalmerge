@@ -10,7 +10,8 @@ Input: [25,30] [2,19] [14, 23] [4,8]
 Output: [2,23] [25,30]
 
 ## Usage  
-#### Compile the project  
+#### Compile the project 
+run the following command from the root of the project  
 ``` shell script
 mvn clean compile assembly:single
 ```
@@ -24,6 +25,5 @@ java -Dtest=AppTest#testPerformance test
 #### Execute the program
 run the following command from the root of the project  
 ```shell script
-cd target   
-java -jar intervalmerge.jar [25,30] [2,19] [14, 23] [4,8]
+java -jar ./target/intervalmerge.jar [25,30] [2,19] [14, 23] [4,8]
 ```
